@@ -58,4 +58,67 @@
    - 自定义列表应用2
       - ![自定义列表应用2](htmlImages/自定义列表应用2.png)
    - 自定义列表语法
-      - ![自定义列表语法](htmlImages/自定义列表语法.png)
+      - ![自定义列表语法.png](htmlImages/自定义列表语法.png.png)
+12. 表单`<form>`
+   - 表单会把他范围内的表单元素信息提交给服务器
+   - 表单域 + 表单控件 + 提示信息
+   - ``` 
+      <form action='url地址' method='表单数据的提交方式' name='表单域名称,用以区分一个页面中的多个表单域'>
+            各种表单控件 
+      </form>
+      ```
+      - action:指定处理表单数据的服务器url地址
+      - method:表单数据的提交方式(post||get)
+      - name:表单域名称,用以区分一个页面中的多个表单域
+   - input控件
+      - 是单标签, 格式为
+         ```
+         <input type='类型' name='' value='' checked='checked' selected='selected' maxlength=正整数>
+         ```
+      - `type='radio'` 表示单选控件 
+         - **一组单选控件的name属性值相同**, 这样便可以实现一组单选控件**多选一**的效果
+         - 举个栗子
+            ``` 
+            <input type='radio' value='男' name='sex'>
+            <input type='radio' value='女' name='sex' checked='checked'>
+            ```
+      - `type='checkbox'` 表示复选控件 
+         - **一组复选控件的name属性要相同**
+         - 举个栗子
+            ```
+            <input type='checkbox' value='篮球' name='hobby' checked='checked'>
+            <input type='checkbox' value='足球' name='hobby'>
+            <input type='checkbox' value='滑冰' name='hobby' checked='checked'>
+            ```
+      - `type='button'` 表示普通按钮 一般触发js事件
+         - 举个栗子
+            ```
+            <input type='button' value='获取短信验证码'>
+            ```
+      - `<label></label>标签` 不属于表单控件 但是常常用于绑定表单元素 扩展鼠标点击范围
+         - label标签的for属性值必须是需要绑定的表单控件的id
+         - 举个栗子
+            ```
+            <label for='man'>男</label>
+            <input type='radio' value='man' name='sex' id='man'>
+
+            <label for='woman'>女</label>
+            <input type='radio' value='woman' name='sex' id='woman'>
+            ```
+   - select下拉表单控件
+      - 当`selected='selected'`时,表示默认选中一个选项
+      - 举个栗子
+         ```
+         <select name='homeland'>
+            <option>山东</option>
+            <option selected='selected'>江苏</option>
+            <option>上海</option>
+         </select>
+         ```
+   - textarea文本域控件
+      - 举个栗子
+         ```
+         <textarea name='msg' rows='3' cols='10'>文本内容</textarea>
+         ```
+      - 实际开发中不会使用cols和rows来控制行列数,会用css来控制
+   
