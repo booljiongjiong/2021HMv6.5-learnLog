@@ -41,3 +41,9 @@
 6. 文字阴影
     - `text-shadow: h-shadow v-shadow blur color`
     - h-shadow 和 v-shadow是必需的
+
+7.两种盒模型的区别
+    - `box-sizing: content-box` 这是默认的盒模型 盒子的宽度 = width + padding + border  ------> 这个width是我们在样式里面写的那个width, 所以这种默认的盒模型会被padding和border撑大盒子, 盒子最终的实际大小是三者之和
+    - `box-sizing: border-box`  这是新的盒模型, 盒子的宽度 = width,  -------------------------> 这个width是我们在样式里面写的那个width, 这种盒模型不会被padding和border撑大(前提是pading和border不会超出设置的width, 否则还是会撑大)
+        - ![borderbox盒模型](cssImages/borderbox盒模型.png)
+
