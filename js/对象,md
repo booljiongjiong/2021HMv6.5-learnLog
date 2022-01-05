@@ -1,0 +1,169 @@
+1. 对象的创建
+    - 通过字面量创建 
+        - 栗子1
+        ```
+            var obj = {};
+            obj.name = "zhangsan";
+            obj.age = 18;
+            obj.sayHi = function(){  console.log("say hi") };
+        ```
+        - 栗子2
+        ```
+            var obj = {
+                name: "张三",
+                age: 18,
+                sayHi: function(){ console.log("say hi")  }
+            }
+        ```
+    - 通过构造函数创建
+        - 构造函数首字母要大写
+        - 构造函数不需要return就可以返回一个实例对象
+        - 调用构造函数 必须使用new
+        - 构造函数里面给构造函数自己的属性赋值的时候 必须使用this
+        - 举个栗子
+            ```
+                //构造函数
+                function Star(uname, age, sex){
+                    this.name = uname;
+                    this.age = age;
+                    this.sex = sex;
+                    this.sing = function(){ console.log("sing a song")}
+                }
+                // 实例化构造函数 创建一个对象
+                var ldh = new Star("刘德华", 60, "男");
+                console.log(ldh.name);
+                console.log(ldh.age);
+                console.log(ldh.sing());
+            ```
+        - new 关键字执行过程:
+            - 1. new Fn();在内存中创建了一个空的对象
+            - 2. this就会指向刚才创建的空对象
+            - 3. 执行构造函数里面的代码, 给这个空对象添加属性和方法
+            - 4. 返回这个实例对象
+2. 对象的遍历
+    - 使用 for...in
+3. 内置对象
+    - js中的对象分为3种: 自定义对象, 内置对象, 浏览器对象
+    - 内置对象 : js语言自带的一些对象, 提供了一些常用的或是基本而必要的功能(属性和方法)
+    - 一些常用的内置对象
+        - 1. `Math`
+            - Math不是一个构造函数, 不需要new, 直接使用里面的静态属性和方法即可
+            - 举个栗子
+                - `Math.max(num1, num2, .....)` 返回一组数中的最大值, 如果这组数中含有不能转换成数字的元素, 则直接返回NaN;  如果这组数没有一个数字,则返回 -Infinity
+                - `Math.floor()`向下取整, 1.1--->1, 1.9--->1
+                - `Math.ceil()`向上取整,  1.1--->2, 1.9--->2
+                - `Math.round()` 四舍五入
+                    - Math.round(1.1) --> 1
+                    - Math.round(1.9) --> 2
+                    - Math.round(1.5) --> 2
+                    - Math.round(-1.4) -->-1
+                    - Math.round(-1.9) -->-2
+                    - Math.round(-1.5) -->-1
+                    - 特别注意x.5比较特殊, 会往大的值取, 尤其是负值的时候:Math.round(-1.5) ---> -1 不是-2哦, 因为-1更大
+                - `Math.random()` 返回[0, 1)之间的随机小数
+                    - 取一个两数之间的随机整数, 包括两个数在内
+                        ```
+                            function getRandomIntInclusive(min, max){
+                                min = Math.ceil(min);
+                                max = Math.floor(max);
+                                return Math.floor(Math.random() * (max - min + 1)) + min;
+                            }
+                        ```
+        - 2. `Date`
+            - Date是一个构造函数, 必须使用new来创建一个实例对象
+            - 不传递参数, 得到的是当前的时间点
+            - 参数常用的写法: 数字型2019, 10, 01; 或者是字符串型'2019-10-1 8:8:8'
+                - 数字型 `new Date(2019, 10, 01)`
+                - 字符串型 `new Date("2019-10-1 8:8:8")`
+            - 格式化日期:
+                - `.getFullYear()` 返回年
+                - `.getMonth() + 1 ` 返回月份, 是从0开始的, 要加1
+                - `.getDate()` 返回当天日期
+                - `.getDay()` 返回周几 0是周日, 1-6分别是周一到周六
+                - `.getHours()` 时
+                - `.getMinutes()` 分
+                - `.getSeconds()`秒
+            - 获取日期的时间戳(毫秒数)   --- 相对于1970年1月1号的毫秒数
+                - 1. 通过 `valueOf()` 或者 `getTime()` 获得
+                - 2. `+new Date()` 也可以获得
+                - 3. `Date.now()` 也可以获得 h5新增的api
+4. Array
+    - 检测是否为array
+        - 1. ` arr instanceof Array`
+        - 2. `Array.isArray(arr)`
+    - 添加删除数组元素
+        - `push(e1, e2, ...)` 末尾添加元素, 返回新的长度
+        - `pop()` 删除最后一个元素, 返回删除的这个元素
+        - `unshift(e1, e2, ...)`向数组开头添加元素, 返回新的长度
+        - `shift()`删除第一个元素, 返回这个删除的元素
+    - 数组排序
+        - `reverse()` 改变原来的数组, 顺序颠倒一下, 返回新数组
+        - `sort()`排序, 改变原来的数组, 返回新数组
+            - sort是冒泡排序实现的
+            -  `[1, 2, 13].sort()`  -------> `[1, 13, 2]`
+            - ```
+                [1, 2, 13].sort(function(a, b){
+                    return a-b; //升序排列
+                })
+              ```
+            - ```
+                ["中国", "微博", "a", "zyk"].sort(function(a, b){
+                    return a.name.localeCompare(b.name);
+                })
+
+                //str1.localCompare(str2) 返回一个数字来指示一个参考字符串是否在排序顺序前面或之后或与给定字符串相同。值小于0表示str1拍在star2前面
+              ```
+        - `toString()` ----> 把数组转换成字符串, 用,连接
+        - `join(分隔符)`---->把数组按照指定分隔符连接成字符串
+        - `concate()` 连接多个数组, 不影响原数组
+        - `slice(start, end)` 返回被截取的新数组
+        - `splice(start, index)` 返回被删除项目的新数组
+5. 基本包装类型
+    - 基本包装类型就是把简单数据类型包装成为复杂数据类型, 这样基本数据类型就有了属性和方法
+    - ```
+        var str = "你好";
+        console.log(str.length);
+        
+        // str是字符串类型, 按照道理简单数据类型是没有属性和方法的, 对象才有属性和方法, 
+        // 但是上面的str.length可以执行, 这是因为js会把基本数据类型包装成为复杂数据类型, 其执行过程如下
+
+        // 1.生成临时变量, 把简单类型包装成为复杂数据类型
+        var tmp = new String("你好");
+        // 2.赋值给我们声明的字符变量
+        str = tmp;
+        // 3. 销毁临时变量
+        tmp = null;
+      ```
+    - 字符串不可变
+        - 字符串不可变指的是里面的值不可变, 虽然可以给一个字符串变量多次赋值, 看上去这个字符串变量的内容改变了, 但其实是这个字符串变量指向的地址变了, 是内存中新开辟了一个内存空间
+        - ```
+            var str = "abc";
+            str = "hello";
+
+            //当重新给str赋值的时候, 常量"abc"不会被修改, 依然在内存中
+            //重新给字符串变量赋值,会重新在内存中开辟空间, 这个特点就是字符串的不可变
+            //由于字符串的不可变, 在大量拼接字符串的时候会有效率问题, 因为不停的拼接字符串就会不停的在内存开辟空间, 导致占用大量内存
+          ```
+    - 字符串变量的一些常用方法
+        - `indexOf("字符", 查找的起始位置)`
+            - 举个栗子:
+                ```
+                //查找并打印输出字符串中的所有字符a
+                var str = "fsdjgjsaidfmslrjwqaioj";
+                var index = str.indexOf("a");
+                while(index != -1){
+                    consleo.log(index);
+                    index = str.indexOf("a", index+1);
+                }
+                ```
+        - `charAt(index)` 返回指定位置上的字符
+        - `charCodeAt(index)`返回指定位置上的字符的ASCI码
+        - `str[index]` 返回指定位置上的字符
+        - `concate(str1, str2, ...)`拼接字符串, 等效于+=
+        - `subStr(start, len)` 截取字符串, start位置开始,截取len个字符
+        - `slice(start, end)` 截取字符串, 不包含end
+        - `subString(start, end)`截取字符串, 不包含end, 基本上等同于slice, 区别在于不接受负数
+        - `replace(被替换的字符, 新的字符)`, 正常只替换一次, 多次替换可以使用正则表达式的全局替换/g
+        - `split(分隔符)` 分割字符串为数组
+        - `toUpperCase()`转换为大写
+        - `yoLowerCase()`转换为小写
