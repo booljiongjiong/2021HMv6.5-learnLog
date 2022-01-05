@@ -1,0 +1,75 @@
+1. 简单数据类型
+    - 数字 默认值0
+        - Number.MAX_VALUE
+        - Number.MIN_VALUE
+        - Number.NEGATIVE_INFINITY 小于任何值 包括Number.MIN_VALUE
+        - Number.POSITIVE_INFINITY 大于任何值 包括Number.MAX_VALUE
+        - Number.isNaN()
+    - 字符串 默认值""
+        - 字符串和任意数字类型相加都是字符串
+    - 布尔 默认false
+        - 布尔类型和数字相加的时候, true的值是1, false的值是0
+        - `true + 1` ------> 数字2
+        - `false + 1` -----> 数字1
+    - undefined
+        -  `var udf = undefined; `
+        - `udf + "pink"` ------> "undefinedpink" (undefined和字符串相加 结果两个字符串的拼接)
+        - `udf + 1` -------> NaN   (undefiend和数字相加 结果是NaN)
+    - null
+        - `var nl = null; `
+        - `nl + "pink"`---------> "nullpink"  (null和字符串相加 结果是两个字符串的拼接)
+        - `nl + 1` --------> 1
+    - 使用 typeof 检测数据类型
+        - `typeof 1` -----> "number"
+        - `typeof "pink"` ----> "string"
+        - `typeof false` -----> "boolean"
+        - `typeof undefiend` ---> "undefiend"
+        - `typeof null` ------> "object"
+    - 数据类型转换
+        - 转换成字符串
+            - `toString()`
+            - `String()` 
+            - `使用加号拼接`
+        - 转换成数字  (重点)
+            - `parseInt(string)`  ---------> 将string转换成 整数数值型
+                - `parseInt('3')` ------> 3
+                - `parseInt('3.14')` ---> 3
+                - `parseInt('3.91')` ---> 3
+                - `parseInt('120px')` --> 120
+                - `parseInt('rem120')` -> NaN
+                - `parseInt(null)`  ---_> NaN
+                - `parseInt(undefined)`  ---_> NaN
+            - `parseFloat(string)` --------> 将string转换成 浮点数数值型
+                - `parseFloat('3.14')` -----> 3.14
+                - `parseFloat('120px')` -----> 120
+                - `parseFloat('rem120')`  -----> NaN
+                - `parseFloat(null)`  ---_> NaN
+                - `parseFloat(undefined)`  ---_> NaN
+            - `Number()`  -------------> 强制转换成数值型
+                - `Number('123')` -------> 123
+                - `Number('123px')` -------> NaN
+            - js隐式转换(- * /)  -------> 利用算术运算符转换为数值型
+                - `'12' - 1`  -------> 11
+                - `'12' + '1'`  -----> 13
+                - `'12' * 12`   ------> 144
+                - `'12' * '12'`   ------> 144
+        - 转换成布尔型
+            - `Boolean()`
+            - 代表 `空`, `否定的值` 会被转换为`false`, 比如 ``, 0, NaN, null, undefined
+            - 其余会被转换成true
+            - `Boolean(0)`    -----> false
+            - `Boolean('0')`  -----> true
+            - `Boolean(true)` -----> true
+            - `Boolean('true')` ---> true
+            - `Boolean(false)` ----> false
+            - `Boolean('false')` --> true
+
+2. 浮点数的精度问题
+    - `0.1 + 0.2 == 0.3` -----> false
+    - `0.7 * 100 == 7`   -----> false
+3. - e1 && e2
+        - e1为真 返回e2
+        - e1为假 返回e1
+   - e1 || e2
+        - e1为真 返回e1
+        - e1为假 返回e2
