@@ -312,8 +312,8 @@
 
 
 8. offset
-    - `ele.offsetTop` 返回元素对于带有定位的父元素的上方的偏移
-    - `ele.offsetLeft` 返回元素对于带有定位的父元素的左边框的偏移
+    - `ele.offsetTop` 返回元素相对于带有定位的父元素的上方的偏移
+    - `ele.offsetLeft` 返回元素相对于带有定位的父元素的左边框的偏移
     - `ele.offsetWidth` 返回自身包括padding, 边框, 内容区的宽度, 返回值不带单位
     - `ele.offsetHeight` 返回自身包括padding, 边框, 内容区的高度, 返回值不带单位
     - `ele.offsetParent` 返回作为该元素带有定位的父级元素, 如果父级都没有定位则返回body
@@ -473,9 +473,161 @@
     - offset-client-offset三者区别
         ![offset-client-scroll三者区别](jsImages/offset-client-scroll三者区别.png)
     
-    
-
 11. 动画
     - 渐渐变缓的动画算法实现 `每次移动的距离 = (目标位置 - 当前位置)/10`
-    - 网页端轮播图
+    - 网页端轮播图              ----------------- 03第三章 WebAPI编程【v6.5】
+        - `ul.style.left = -index * itemW +'px';` 网页端使用left实现图片位移, 加上定时器实现动画效果
         - 定时器自动翻页, 相当于手动调用右翻页按钮的事件, 所以可以使用`right_btn.click();`实现
+        - `window.scroll(x, y)` 窗口滚动到指定xy位置, xy不带单位
+    - 移动端轮播图              ----------------- 03第三章 WebAPI编程【v6.5】
+        - "3" - 1 - 2 - 3 - "1"  正常的1-2-3张图片, 为了实现无缝衔接, 首部加上一个3, 尾部加上一个1
+        - `ul.style.transform= 'translateX('+ -index*itemW +'px)';` 移动端使用transform实现图片位移
+        - `ul.style.transition = 'all .3s'` 移动端使用过渡transition实现动画效果
+        - 实现自动播放时候的无缝滚动, 需要判断当前滚动的是否达到了边界, 是的话需要切换到首尾两张假图片上, 但是这个切换需要等待图片过渡完毕
+            ```
+            ul.addEventListener('transitionend', function(e){
+                //无缝滚动
+                if(index == 3){
+                    index = 0; //当前滚动到了最后一张图片, 也就是那个假"1", 需要重置过渡效果并且位移到真正的第一张图片位置
+                    ul.style.transition = 'none';
+                    ul.style.transform = 'translateX(' + -index*itemW + 'px)';
+                }else if(index < 0){
+                    index = 2;/当前图片滚动到了最前面的一张图片, 也就是那个假"3", 需要重置过度效果并且位移到真正的最右一张图片3的位置, 对应的index是2
+                    ul.style.transition = 'none';
+                    ul.style.transform = 'translateX(' + -index*itemW + 'px)';
+                }
+            });
+            ```
+        -  `ele.classList`  --- ie10以上才支持
+            - `ele.classList.add('xxx')` 添加类名, 类名不需要加.
+            - `ele.classList.remove('xxx')` 删除类名, 类名不需要加.
+            - `ele.classList.toggle('xxx')` 切换类名, 类名不需要加. 有则删除,没有则添加
+        - 手指事件
+            - `touch`事件可响应用户手指(或触控笔)对屏幕或者触控板操作
+            - `touchstart` 手指触摸到一个DOM元素时触发
+            - `touchmove` 手指在一个DOM元素上滑动时触发
+            - `touchend` 手指从一个DOM元素上移开时触发
+            - `toughEvent`对象的常见属性:
+                - `touches` 正在触摸屏幕的所有手指的列表
+                - `targetTouches` 正在触摸当前DOm元素上的手指的列表
+                - `changedTouches` 手指状态发生改变的列表, 从无到有, 从有到无的变化
+                - `Touch对象`的常见属性
+                    - clientX|Y
+                    - pageX|Y
+                    - screenX|Y
+                    - target
+            - 举个栗子: 手指滑动轮播图
+                ```
+                ul.addEventListener('touchstart', function(e){
+                    startX = e.targetTouches[0].pageX; //手指出初始位置
+                    clearInterval(_timer); //手指拖动的时候去掉定时器的自动轮播效果
+                })
+                ```
+                ```
+                ul.addEventListener('touchmove', function(e){
+                    moveX = e.targetTouches[0].pageX - startX; //手指移动的距离
+                    targetX = -index*itemW + moveX;
+                    ul.style.transition = 'none'; //手指拖动的时候, 不需要动画效果, 所以取消过渡效果
+                    ulstyle.transform = 'translateX(' + targetX + 'px)';
+
+                    flag = true;//加一个手指确实滚动的标记, 防止没有滚动时候touchend事件多做一次运算
+                    e.preventDefault();//阻止在拖动时候的滚动屏幕的行为
+                })
+                ```
+                ```
+                ul.addEventListener('touchmend', function(e){
+                    if(flag){
+                        flag = false;
+                        
+                        moveX = e.targetTouches[0].pageX - startX; //手指移动的距离
+                        targetX = -index*itemW + moveX;
+                        ul.style.transition = 'none'; //手指拖动的时候, 不需要动画效果, 所以取消过渡效果
+                        ulstyle.transform = 'translateX(' + targetX + 'px)';
+
+                        if(Math.abs(moveX) > 50){
+                            //滑动超出50 播放上一张或者下一张
+                            if(moveX > 0){
+                                index -- ; //手指右划
+                            }else{
+                                index ++ ; //手指左划
+                            }
+
+                            ul.style.transition = 'all .3s';
+                            ul.style.transform = 'translateX(' + -index*itemW + 'px)';
+                        }else{
+                            //滑动距离没有超出50 回弹
+                            ul.style.trasition = 'all .1s'
+                            ul.style.transform = 'translateX(' + -index*itemW + 'px)';
+                        }
+
+                        clearInterval(_timer); //加定时器之前先清除一下, 保证只有一个定时器, 这样不会因为重复添加了多个定时器导致定时效果出现越来越快的问题
+                        _timer = setInterval(func, 2000);// 手指离开屏幕, 开启定时器自动轮播效果
+                    }
+                })
+                ```
+    - 移动端
+        - 移动端click事件延时300ms
+            - 移动端click事件会有300ms延时,原因是移动端屏幕双击要缩放页面(double tap to zoom)
+            - 解决方案:
+                - 1. 禁用缩放 `<meta name='viewport' content='user-scalable=no'>`
+                - 2. 利用touch事件封装这个事件解决300ms延迟
+                    - 手指触摸屏幕的时候, 记录当前触摸时间
+                    - 手指离开屏幕, 用离开的时间减去触摸的时间
+                    - 如果时间小于150ms, 并且没有划过屏幕, 就定义为点击
+                      ```
+                        function tap(obj, callBack){
+                            var isMove = false;
+                            var startTime = 0;
+                            obj.addEventListener('touchstart', function(e){
+                                startTime = +Date.now();
+                            })
+                            obj.addEventListener('touchmove', function(e){
+                                isMove = true;
+                            })
+                            obj.addEventListener('touchend', funcntion(e){
+                                if(!isMove && Date.now() - startTime < 150){
+                                    callBack && callBack();
+                                }
+                                startTime = 0;
+                            });
+                        }
+                        //调用
+                        tap(div, funcntion(){...});
+                      ```
+                - 3. fastclick插件解决300ms延时
+                    - 引入fastclick.js文件
+                    - 
+                      ```
+                        if('addEventListener' in document){
+                            document.addEventListenner('DOMContentLoaded', function(){
+                                FastClick.attach(document.body);
+                            });
+                        }
+                      ```
+        - 移动端插件使用
+            - swiper插件的使用
+                - 官网查看并确认插件实现的功能
+                - 下载插件
+                - 打开demo实例文件, 查看需要引入的相关文件js/css, 并且引入
+                - 复制demo中的结构html,样式css以及js代码
+12. 本地存储
+    - 数据存储在用户浏览器中, 读写数据方便, 甚至刷新页面不丢失数据
+    - 容量较大, sessionStorage约5M, localStorage约20M
+    - 只能存储字符串, 可以将对象JSON.stringify()编码后存储
+    - `window.sessionStorage`
+        - 生命周期为关闭浏览器窗口
+        - 同一个窗口(页面)下数据可以共享
+        - 以键值对形式存储和使用
+        - 存储数据 `window.sessionStorage.setItem(key, value)`
+        - 获取数据 `window.sessionStorage.getItem(key)`
+        - 删除数据 `window.sessionStorage.removeItem(key)`
+        - 删除所有数据 `window.sessionStorage.clear()`
+    - `window.localStorage`
+        - 生命周期永久生效, 除非手动删除, 否则关闭页面也会存在
+        - 可以多窗口(页面)共享  (同一浏览器共享)
+        - 以键值对形式存储使用
+        - 存储数据 `window.localStorage.setItem(key, val)`
+        - 获取数据 `window.localStorage.getItem(key)`
+        - 删除数据 `window.localStorage.removeItem(key)`
+        - 删除所有数据 `window.localStorage.clear()`
+        
